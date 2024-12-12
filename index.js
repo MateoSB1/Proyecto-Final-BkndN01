@@ -3,7 +3,7 @@ class ProductsManager {
     constructor() {
         this.#products = [
             // Vector de ejemplo
-            { id: 1, code: "pr001", title: "Martillo", description: "abc", price: 20, thumbnail: "./image", stock: 5 }
+            // { id: 1, title: "Martillo", description: "abc", price: 20, thumbnail: "./image", code: "prId001", stock: 8 }
         ]
     }
 
@@ -47,3 +47,13 @@ class ProductsManager {
 }
 
 const productManager = new ProductsManager()
+
+// Testing
+/*
+console.log(productManager.getProducts())
+productManager.addProduct("producto prueba", "Este es un producto prueba", 200, "Sin imagen", "abc123", 25)
+console.log(productManager.getProducts())
+productManager.addProduct("producto prueba", "Este es un producto prueba", 200, "Sin imagen", "abc123", 25)
+console.log(productManager.getProductById(98))
+console.log(productManager.getProductById(1))
+*/
