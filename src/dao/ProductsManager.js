@@ -8,6 +8,8 @@ export class ProductsManager {
         ProductsManager.#path = rutaArchivo
     }
 
+    // PRODUCTS
+
     // Devuelve el arreglo completo
     static async getProducts() {
         if (fs.existsSync(ProductsManager.#path)) {
@@ -97,4 +99,71 @@ export class ProductsManager {
         }
         await fs.promises.writeFile(ProductsManager.#path, datos)
     }
+
+    // CARTS
+
+    // Devuelve el arreglo que coincida con el id pedido
+    static async getCartById(id) {
+        let carts = await ProductsManager.getCarts();
+        let cart = carts.find((c) => c.id === id);
+        return cart
+    }
+
+    // Agregar carrito
+    static async addCart() {
+        let carts = await ProductsManager.getCarts();
+        let id = 1;
+        if (carts.length > 0) {
+            id = carts[carts.length - 1].id + 1;
+        }
+    
+        let newCart = {
+            id,
+            products: []
+        };
+    
+        carts.push(newCart);
+    
+        await ProductsManager.#cargarArchivo(JSON.stringify(carts, null, "\t"))
+        return newCart;
+    }
+    
+    // Agregar producto al carrito
+    static async addProductCart(cartId, productId, quantity) {
+        let carts = JSON.parse(await fs.promises.readFile(ProductsManager.#path, "utf-8"));
+        let cart = await ProductsManager.getCartById(cartId);
+    
+        if (!cart) throw new Error(`Carrito con id ${cartId} no encontrado`);
+    
+        let productIndex = cart.products.findIndex((p) => p.product === productId);
+    
+        if (productIndex !== -1) {
+            cart.products[productIndex].quantity += quantity;
+        } else {
+            cart.products.push({ product: productId, quantity });
+        }
+    
+        // Reemplaza el carrito modificado en la lista
+        carts = carts.map((c) => (c.id === cartId ? cart : c));
+    
+        await ProductsManager.#cargarArchivo(JSON.stringify(carts, null, "\t"))
+        return cart;
+    }
+    
+    // Eliminar producto del carrito por id
+    static async deleteProductCart(cartId, productId) {
+        let carts = JSON.parse(await fs.promises.readFile(ProductsManager.#path, "utf-8"));
+        let cart = await ProductsManager.getCartById(cartId);
+    
+        if (!cart) throw new Error(`Carrito con id ${cartId} no encontrado`);
+    
+        cart.products = cart.products.filter((p) => p.product !== productId);
+    
+        // Reemplaza el carrito modificado en la lista
+        carts = carts.map((c) => (c.id === cartId ? cart : c));
+    
+        await ProductsManager.#cargarArchivo(JSON.stringify(carts, null, "\t"))
+        return cart;
+    }
+    
 }
