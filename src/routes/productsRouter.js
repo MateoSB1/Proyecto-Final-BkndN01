@@ -4,7 +4,7 @@ import { procesadorDeErrores500, validarProducto } from "../utils.js"
 
 export const router = Router()
 
-ProductsManager.setPath("./src/data/products.json")
+ProductsManager.setProductsPath("./src/data/products.json")
 
 router.get("/", async (req, res) => {
     try {
@@ -44,15 +44,14 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
 
-    let { code, title, description, price, status, stock, category, thumbnail, ...otros } = req.body
-    // let {code, ...otros } = req.body
+    let { code, title, description, price, status, stock, category, thumbnail } = req.body
     if ((!title || !description || !code || !price || !status || !stock || !category || !thumbnail)) {
         res.setHeader('Content-Type', 'application/json')
         return res.status(400).json({ error: 'Completa la información' })
     }
 
     // Validaciones individuales de tipo de dato
-    const errores = validarProducto({ code, title, description, price, status, stock, category, thumbnail, ...otros })
+    const errores = validarProducto({ code, title, description, price, status, stock, category, thumbnail })
 
     // Si hay errores, devolver la lista
     if (errores.length > 0) {
@@ -68,7 +67,7 @@ router.post("/", async (req, res) => {
             return res.status(400).json({ error: `Ya existe el producto con código ${code}` })
         }
 
-        let nuevoProducto = await ProductsManager.addProduct({ code, title, description, price, status, stock, category, thumbnail, ...otros })
+        let nuevoProducto = await ProductsManager.addProduct({ code, title, description, price, status, stock, category, thumbnail })
 
         res.setHeader('Content-Type', 'application/json')
         return res.status(201).json({ payload: `Producto dado de alta exitosamente!`, nuevoProducto })

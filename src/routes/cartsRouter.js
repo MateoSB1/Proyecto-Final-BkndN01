@@ -4,7 +4,7 @@ import { procesadorDeErrores500 } from "../utils.js"
 
 export const router = Router()
 
-ProductsManager.setPath("./src/data/carts.json")
+ProductsManager.setCartsPath("./src/data/carts.json")
 
 // Obtener carrito por id
 router.get("/:id", async (req, res) => {
@@ -88,8 +88,8 @@ router.put("/:id/products/:productId", async (req, res) => {
 
         product.quantity = quantity
 
-        await ProductsManager.addProductCart(id, productId, quantity)
-        return res.status(200).json({ payload: `Cantidad actualizada`, cart })
+        await ProductsManager.addProductCart(id, productId, quantity - product.quantity);
+        return res.status(200).json({ payload: `Cantidad actualizada`, cart });
     } catch (error) {
         procesadorDeErrores500(res, error)
     }

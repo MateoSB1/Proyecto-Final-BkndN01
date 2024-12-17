@@ -1,19 +1,24 @@
 import fs from "fs"
 export class ProductsManager {
-    static #path = ""
+    static #productsPath = "";
+    static #cartsPath = "";
 
     constructor() {}
 
-    static setPath(rutaArchivo) {
-        ProductsManager.#path = rutaArchivo
+    static setProductsPath(rutaArchivo) {
+        ProductsManager.#productsPath = rutaArchivo;
+    }
+
+    static setCartsPath(rutaArchivo) {
+        ProductsManager.#cartsPath = rutaArchivo;
     }
 
     // PRODUCTS
 
     // Devuelve el arreglo completo
     static async getProducts() {
-        if (fs.existsSync(ProductsManager.#path)) {
-            return JSON.parse(await fs.promises.readFile(ProductsManager.#path, { encoding: "utf-8" }))
+        if (fs.existsSync(ProductsManager.#productsPath)) {
+            return JSON.parse(await fs.promises.readFile(ProductsManager.#productsPath, { encoding: "utf-8" }))
         } else {
             return []
         }
@@ -53,7 +58,7 @@ export class ProductsManager {
         }
         products.push(nuevoProduct)
 
-        await ProductsManager.#cargarArchivo(JSON.stringify(products, null, "\t"))
+        await ProductsManager.#cargarArchivoProduct(JSON.stringify(products, null, "\t"))
 
         return nuevoProduct
     }
@@ -72,7 +77,7 @@ export class ProductsManager {
             id,
         }
 
-        await ProductsManager.#cargarArchivo(JSON.stringify(products, null, "\t"))
+        await ProductsManager.#cargarArchivoProduct(JSON.stringify(products, null, "\t"))
         return products[indiceProduct]
     }
 
@@ -87,17 +92,17 @@ export class ProductsManager {
 
         let [productoEliminado] = products.splice(indiceProduct, 1)
 
-        await ProductsManager.#cargarArchivo(JSON.stringify(products, null, "\t"))
+        await ProductsManager.#cargarArchivoProduct(JSON.stringify(products, null, "\t"))
 
         return productoEliminado
     }
 
-    // Función para cargar archivo
-    static async #cargarArchivo(datos = "") {
+    // Función para cargar archivo de products
+    static async #cargarArchivoProduct(datos = "") {
         if (typeof datos !== "string") {
             throw new Error(`Error archivo inválido`)
         }
-        await fs.promises.writeFile(ProductsManager.#path, datos)
+        await fs.promises.writeFile(ProductsManager.#productsPath, datos)
     }
 
     // CARTS
@@ -124,35 +129,37 @@ export class ProductsManager {
     
         carts.push(newCart);
     
-        await ProductsManager.#cargarArchivo(JSON.stringify(carts, null, "\t"))
+        await ProductsManager.#cargarArchivoCart(JSON.stringify(carts, null, "\t"))
         return newCart;
     }
     
     // Agregar producto al carrito
     static async addProductCart(cartId, productId, quantity) {
-        let carts = JSON.parse(await fs.promises.readFile(ProductsManager.#path, "utf-8"));
+        let carts = JSON.parse(await fs.promises.readFile(ProductsManager.#cartsPath, "utf-8"));
         let cart = await ProductsManager.getCartById(cartId);
     
         if (!cart) throw new Error(`Carrito con id ${cartId} no encontrado`);
     
         let productIndex = cart.products.findIndex((p) => p.product === productId);
     
+        let updatedProducts = [...cart.products];
         if (productIndex !== -1) {
-            cart.products[productIndex].quantity += quantity;
+            updatedProducts[productIndex].quantity += quantity;
         } else {
-            cart.products.push({ product: productId, quantity });
+            updatedProducts.push({ product: productId, quantity });
         }
+        cart.products = updatedProducts;        
     
         // Reemplaza el carrito modificado en la lista
         carts = carts.map((c) => (c.id === cartId ? cart : c));
     
-        await ProductsManager.#cargarArchivo(JSON.stringify(carts, null, "\t"))
+        await ProductsManager.#cargarArchivoCart(JSON.stringify(carts, null, "\t"))
         return cart;
     }
     
     // Eliminar producto del carrito por id
     static async deleteProductCart(cartId, productId) {
-        let carts = JSON.parse(await fs.promises.readFile(ProductsManager.#path, "utf-8"));
+        let carts = JSON.parse(await fs.promises.readFile(ProductsManager.#cartsPath, "utf-8"));
         let cart = await ProductsManager.getCartById(cartId);
     
         if (!cart) throw new Error(`Carrito con id ${cartId} no encontrado`);
@@ -162,8 +169,16 @@ export class ProductsManager {
         // Reemplaza el carrito modificado en la lista
         carts = carts.map((c) => (c.id === cartId ? cart : c));
     
-        await ProductsManager.#cargarArchivo(JSON.stringify(carts, null, "\t"))
+        await ProductsManager.#cargarArchivoCart(JSON.stringify(carts, null, "\t"))
         return cart;
     }
-    
+
+    // Función para cargar archivo de products
+    static async #cargarArchivoCart(datos = "") {
+        if (typeof datos !== "string") {
+            throw new Error(`Error archivo inválido`)
+        }
+        await fs.promises.writeFile(ProductsManager.#cartsPath, datos)
+    }
+
 }
