@@ -44,8 +44,8 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
 
-    let { code, title, description, price, status, stock, category, thumbnail } = req.body
-    if ((!title || !description || !code || !price || !status || !stock || !category || !thumbnail)) {
+    let { code, title, description, price, status = true, stock, category, thumbnail } = req.body
+    if ((!title || !description || !code || !price || !stock || !category )) {
         res.setHeader('Content-Type', 'application/json')
         return res.status(400).json({ error: 'Completa la información' })
     }

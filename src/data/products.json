@@ -1,0 +1,35 @@
+[
+	{
+		"id": 1,
+		"code": "ABC123",
+		"title": "New Product",
+		"description": "Description of the new product",
+		"price": 100,
+		"status": true,
+		"stock": 50,
+		"category": "Category",
+		"thumbnail": "url1"
+	},
+	{
+		"id": 2,
+		"code": "ABC124",
+		"title": "New Product 2",
+		"description": "Description of the new product",
+		"price": 100,
+		"status": true,
+		"stock": 50,
+		"category": "Category",
+		"thumbnail": "url1"
+	},
+	{
+		"id": 3,
+		"code": "ABC126",
+		"title": "New Product 3",
+		"description": "Description of the new product",
+		"price": 100,
+		"status": true,
+		"stock": 50,
+		"category": "Category",
+		"thumbnail": "url3"
+	}
+]

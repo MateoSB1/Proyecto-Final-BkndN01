@@ -16,7 +16,6 @@ app.get('/', (req, res) => {
     res.status(200).send('OK');
 })
 
-
 const server = app.listen(PORT, () => {
-    console.log(`Server escuchando en puerto ${PORT}`);
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
