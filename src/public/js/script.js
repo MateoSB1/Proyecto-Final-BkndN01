@@ -78,7 +78,7 @@ document.getElementById("add-product-form").addEventListener("submit", (event) =
         code: formData.get("code"),
         stock: formData.get("stock"),
         category: formData.get("category"),
-        thumbnails: formData.get("thumbnails"),
+        thumbnail: formData.get("thumbnail"),
         status: formData.get("status") === "true" ? true : false, 
     }
 

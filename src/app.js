@@ -39,8 +39,8 @@ io.on("connection", async (socket) => {
     socket.emit("products", await ProductsManager.getProducts())
 
     socket.on("addProduct", async (productData) => {
-        const { title, description, price, code, status, stock, category, thumbnails } = productData
-        await ProductsManager.addProduct(title, description, price, code, status, stock, category, thumbnails)
+        const { title, description, price, code, status, stock, category, thumbnail } = productData
+        await ProductsManager.addProduct(title, description, price, code, status, stock, category, thumbnail)
         io.emit("products", await ProductsManager.getProducts())
     })
 
