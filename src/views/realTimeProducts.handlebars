@@ -1,0 +1,50 @@
+<div class="container-rtproduct">
+    <h1 class="title-rtproducts">Productos en tiempo real</h1>
+    <div id="productsContainer" class="products-grid">
+        <!-- Cards Productos -->
+    </div>
+    <div class="form-container">
+        <h4 class="form-header">Agregar producto</h4>
+        <form id="add-product-form" class="form">
+            <div class="form-group">
+                <label for="title" class="form-label">Título:</label>
+                <input type="text" id="title" name="title" placeholder="Ingresa título" required>
+            </div>
+            <div class="form-group">
+                <label for="description" class="form-label">Descripción:</label>
+                <textarea id="description" name="description" placeholder="Ingresa descripción" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="price" class="form-label">Precio:</label>
+                <input type="number" id="price" name="price" placeholder="Ingresa precio" required>
+            </div>
+            <div class="form-group">
+                <label for="code" class="form-label">Código:</label>
+                <input type="text" id="code" name="code" placeholder="Ingresa código" required>
+            </div>
+            <div class="form-group">
+                <label for="stock" class="form-label">Stock:</label>
+                <input type="number" id="stock" name="stock" placeholder="Ingresa Stock" required>
+            </div>
+            <div class="form-group">
+                <label for="category" class="form-label">Categoría:</label>
+                <input type="text" id="category" name="category" placeholder="Ingresa categoría" required>
+            </div>
+            <div class="form-group">
+                <label for="thumbnails" class="form-label">Imágenes:</label>
+                <input type="text" id="thumbnails" name="thumbnails"
+                    placeholder="URLs entre comillas y separadas por coma">
+            </div>
+            <div class="form-group">
+                <label for="status" class="form-label">Estado:</label>
+                <select id="status" name="status">
+                    <option value="true">Activo</option>
+                    <option value="false">Inactivo</option>
+                </select>
+            </div>
+            <div class="form-action">
+                <button type="submit" class="btn-rtproducts">Agregar producto</button>
+            </div>
+        </form>
+    </div>
+</div>

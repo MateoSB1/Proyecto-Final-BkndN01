@@ -126,3 +126,5 @@ router.delete("/:id", async (req, res) => {
         procesadorDeErrores500(res, error)
     }
 })
+
+export default router

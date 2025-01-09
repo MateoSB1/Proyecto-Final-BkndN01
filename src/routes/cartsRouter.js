@@ -88,8 +88,8 @@ router.put("/:id/products/:productId", async (req, res) => {
 
         product.quantity = quantity
 
-        await CartManager.addProductCart(id, productId, quantity - product.quantity);
-        return res.status(200).json({ payload: `Cantidad actualizada`, cart });
+        await CartManager.addProductCart(id, productId, quantity - product.quantity)
+        return res.status(200).json({ payload: `Cantidad actualizada`, cart })
     } catch (error) {
         procesadorDeErrores500(res, error)
     }
@@ -113,3 +113,5 @@ router.delete("/:id/products/:productId", async (req, res) => {
         procesadorDeErrores500(res, error)
     }
 })
+
+export default router

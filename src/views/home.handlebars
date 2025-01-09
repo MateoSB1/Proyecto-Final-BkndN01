@@ -1,0 +1,35 @@
+<div class="container-home">
+    <h3 class="h3-home">Lista de productos</h3>
+    {{#if products.length}}
+    <table class="table-home">
+        <thead>
+            <tr class="tr-home">
+                <th class="th-home">Título</th>
+                <th class="th-home">Descripción</th>
+                <th class="th-home">Precio</th>
+                <th class="th-home">Código</th>
+                <th class="th-home">Estado</th>
+                <th class="th-home">Stock</th>
+                <th class="th-home">Categoría</th>
+                <th class="th-home">Imágenes</th>
+            </tr>
+        </thead>
+        <tbody class="tbody-home">
+            {{#each products}}
+            <tr class="tr-home">
+                <td class="td-home">{{this.title}}</td>
+                <td class="td-home">{{this.description}}</td>
+                <td class="td-home">{{this.price}}</td>
+                <td class="td-home">{{this.code}}</td>
+                <td class="td-home">{{this.status}}</td>
+                <td class="td-home">{{this.stock}}</td>
+                <td class="td-home">{{this.category}}</td>
+                <td class="td-home">{{this.thumbnails}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    {{else}}
+    <p class="p-home">No hay productos ingresados en el sistema.</p>
+    {{/if}}
+</div>

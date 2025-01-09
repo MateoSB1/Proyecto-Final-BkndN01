@@ -1,17 +1,17 @@
 import fs from "fs"
 export class ProductsManager {
-    static #productsPath = "";
+    static #productsPath = ""
 
     static setProductsPath(rutaArchivo) {
-        ProductsManager.#productsPath = rutaArchivo;
+        ProductsManager.#productsPath = rutaArchivo
     }
 
     // Devuelve el arreglo completo
     static async getProducts() {
         if (fs.existsSync(ProductsManager.#productsPath)) {
-            return JSON.parse(await fs.promises.readFile(ProductsManager.#productsPath, { encoding: "utf-8" }));
+            return JSON.parse(await fs.promises.readFile(ProductsManager.#productsPath, { encoding: "utf-8" }))
         } else {
-            return [];
+            return []
         }
     }
 
@@ -97,3 +97,5 @@ export class ProductsManager {
     }
 
 }
+
+export default ProductsManager
