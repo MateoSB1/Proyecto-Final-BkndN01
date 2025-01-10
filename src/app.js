@@ -40,14 +40,24 @@ io.on("connection", async (socket) => {
 
     socket.on("addProduct", async (productData) => {
         const { title, description, price, code, status, stock, category, thumbnail } = productData
-        await ProductsManager.addProduct(title, description, price, code, status, stock, category, thumbnail)
+        await ProductsManager.addProduct({ title, description, price, code, status, stock, category, thumbnail })
         io.emit("products", await ProductsManager.getProducts())
     })
 
     socket.on("deleteProduct", async (productId) => {
-        await ProductsManager.deleteProduct(productId)
-        io.emit("products", await ProductsManager.getProducts())
+        if (!productId) {
+            return
+        }
+
+        try {
+            await ProductsManager.deleteProduct(productId)
+            const products = await ProductsManager.getProducts()
+            io.emit("products", products)
+        } catch (error) {
+            console.error(`Error al eliminar producto con ID: ${productId}`, error)
+        }
     })
+    
 
     socket.on("disconnect", () => {
         console.log("Cliente desconectado")

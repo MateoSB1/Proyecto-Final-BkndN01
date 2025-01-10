@@ -29,7 +29,7 @@ const renderProducts = (data) => {
 
     data.forEach(item => {
         const card = document.createElement("div")
-        card.classList.add("card", "custom-border", "custom-rounded", "custom-shadow", "margin-bottom")
+        card.classList.add("card")
 
         card.innerHTML = `
             <div class="card-body">
@@ -53,7 +53,7 @@ const renderProducts = (data) => {
                     </li>
                 </ul>
                 <div class="button-container">
-                    <button class="btn" onclick="deleteProduct('${item.id}')">Eliminar</button>
+                    <button class="btn" onclick="deleteProduct(${item.id})">Eliminar</button>
                 </div>
             </div>
         `
@@ -61,27 +61,30 @@ const renderProducts = (data) => {
         productsContainer.appendChild(card)
     })
 }
-  
 
 const deleteProduct = (id) => {
+    if (!id) {
+        return
+    }
     socket.emit("deleteProduct", id)
 }
+
 
 document.getElementById("add-product-form").addEventListener("submit", (event) => {
     event.preventDefault()
 
     const formData = new FormData(event.target)
     const product = {
+        code: formData.get("code"),
         title: formData.get("title"),
         description: formData.get("description"),
-        price: formData.get("price"),
-        code: formData.get("code"),
-        stock: formData.get("stock"),
+        price: parseFloat(formData.get("price")),
+        stock: parseInt(formData.get("stock"), 10),
         category: formData.get("category"),
         thumbnail: formData.get("thumbnail"),
-        status: formData.get("status") === "true" ? true : false, 
+        status: formData.get("status") === "true"
     }
 
     socket.emit("addProduct", product)
-    event.target.reset() 
+    event.target.reset()
 })

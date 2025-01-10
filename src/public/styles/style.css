@@ -226,18 +226,31 @@ nav ul li a:hover {
     margin: 20px 0;
 }
 
-.products-grid {
+.products-cont {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
+    justify-content: center;
+    gap: 1.2rem;
+    margin: 20px;
 }
 
 .card {
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: 10px;
-    background-color: #fff;
+    max-width: 590px;
+}
+
+.card-title {
+    font-size: 2rem;
+    padding: 0;
+    margin: 0;
+}
+
+.card-text {
+    font-size: 1.3rem;
+    padding: 0;
+    margin: 0;
 }
 
 .form-container {
@@ -297,20 +310,4 @@ textarea {
 
 .btn-rtproducts:hover {
     background-color: #0056b3;
-}
-
-.custom-border {
-    border: 1px solid #ddd;
-}
-
-.custom-rounded {
-    border-radius: 5px;
-}
-
-.custom-shadow {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.margin-bottom {
-    margin-bottom: 15px;
 }
