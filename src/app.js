@@ -9,7 +9,7 @@ import productsRouter from "./routes/productsRouter.js"
 import cartsRouter from "./routes/cartsRouter.js"
 import viewsRouter from "./routes/viewsRouter.js"
 
-import connectDB from './connect.js' 
+import connectDB from './connect.js'
 
 connectDB(
     "mongodb+srv://mateobrancato26:yseG2y8N1AwORQt0@cluster0.iyyd1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
@@ -35,30 +35,30 @@ app.use("/api/products", productsRouter)
 app.use("/api/carts", cartsRouter)
 app.use("/", viewsRouter)
 
-app.set("socketio", io) 
+app.set("socketio", io)
 
 httpServer.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`)
 })
 
 io.on("connection", async (socket) => {
-    console.log('Cliente conectado');
+    console.log('Cliente conectado')
 
-    const limit = 10;
+    const limit = 10
 
-    const products = await ProductsManager.getProducts({ limit, page: 1 });
-    socket.emit('products', products.docs, products.totalPages, 1);
+    const products = await ProductsManager.getProducts({ limit, page: 1 })
+    socket.emit('products', products.docs, products.totalPages, 1)
 
     socket.on('requestProductsPage', async (page) => {
-        const products = await ProductsManager.getProducts({ limit, page });
-        socket.emit('paginatedProducts', products.docs, products.totalPages, page);
-    });
+        const products = await ProductsManager.getProducts({ limit, page })
+        socket.emit('paginatedProducts', products.docs, products.totalPages, page)
+    })
 
     socket.on('addProduct', async (productData) => {
-        await ProductsManager.addProduct(productData);
-        const updatedProducts = await ProductsManager.getProducts({ limit, page: 1 });
-        io.emit('products', updatedProducts.docs, updatedProducts.totalPages, 1);
-    });    
+        await ProductsManager.addProduct(productData)
+        const updatedProducts = await ProductsManager.getProducts({ limit, page: 1 })
+        io.emit('products', updatedProducts.docs, updatedProducts.totalPages, 1)
+    })
 
     socket.on("deleteProduct", async (productId) => {
         if (!productId) {
@@ -75,6 +75,6 @@ io.on("connection", async (socket) => {
     })
 
     socket.on('disconnect', () => {
-        console.log('Cliente desconectado');
-    });
-});
+        console.log('Cliente desconectado')
+    })
+})

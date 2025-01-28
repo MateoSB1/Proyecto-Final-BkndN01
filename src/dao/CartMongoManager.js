@@ -13,21 +13,21 @@ export class CartMongoManager {
 
     static async getAllCarts() {
         try {
-            return await Cart.find().populate('products.product');
+            return await Cart.find().populate('products.product')
         } catch (error) {
-            console.error("Error al obtener todos los carritos:", error);
-            throw new Error("Error al obtener todos los carritos");
+            console.error("Error al obtener todos los carritos:", error)
+            throw new Error("Error al obtener todos los carritos")
         }
-    }    
+    }
 
     static async getCartById(id) {
         try {
-            return await Cart.findById(id).populate('products.product'); // Incluye los datos del producto
+            return await Cart.findById(id).populate('products.product')
         } catch (error) {
-            console.error("Error al obtener el carrito por ID:", error);
-            throw new Error("Error al obtener el carrito por ID");
+            console.error("Error al obtener el carrito por ID:", error)
+            throw new Error("Error al obtener el carrito por ID")
         }
-    }    
+    }
 
     static async addProductCart(cid, pid) {
         try {
@@ -48,7 +48,7 @@ export class CartMongoManager {
             throw new Error("Error al agregar producto al carrito")
         }
     }
-    
+
     static async deleteProductCart(cid, pid) {
         try {
             const cart = await Cart.findById(cid)

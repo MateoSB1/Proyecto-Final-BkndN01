@@ -82,14 +82,14 @@ export class ProductsMongoManager {
 
     static async deleteProduct(id) {
         try {
-            const deletedProduct = await Product.findByIdAndDelete(id);
+            const deletedProduct = await Product.findByIdAndDelete(id)
             if (!deletedProduct) {
-                throw new Error("Producto no encontrado");
+                throw new Error("Producto no encontrado")
             }
-            return deletedProduct;
+            return deletedProduct
         } catch (error) {
-            console.error("Error al eliminar el producto:", error);
-            throw new Error("Error al eliminar el producto");
+            console.error("Error al eliminar el producto:", error)
+            throw new Error("Error al eliminar el producto")
         }
     }
 }

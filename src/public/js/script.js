@@ -17,24 +17,23 @@ window.addEventListener("resize", () => {
 })
 
 /* REALTIMEPRODUCTS.HANDLEBARS */
-const socket = io();
+const socket = io()
 
-// Renderizar productos recibidos
 socket.on("products", (data, totalPages, currentPage) => {
-    renderProducts(data, totalPages, currentPage);
-});
+    renderProducts(data, totalPages, currentPage)
+})
 
 socket.on("paginatedProducts", (data, totalPages, currentPage) => {
-    renderProducts(data, totalPages, currentPage);
-});
+    renderProducts(data, totalPages, currentPage)
+})
 
 const renderProducts = (data, totalPages, currentPage) => {
-    const productsContainer = document.getElementById("productsContainer");
-    productsContainer.innerHTML = "";
+    const productsContainer = document.getElementById("productsContainer")
+    productsContainer.innerHTML = ""
 
     data.forEach(item => {
-        const card = document.createElement("div");
-        card.classList.add("card");
+        const card = document.createElement("div")
+        card.classList.add("card")
         card.innerHTML = `
             <div class="card-body">
                 <h5 class="card-title">Título: ${item.title}</h5>
@@ -50,23 +49,21 @@ const renderProducts = (data, totalPages, currentPage) => {
                     <button class="btn-rtproducts" onclick="deleteProduct(${item.id})">Eliminar</button>
                 </div>
             </div>
-        `;
-        productsContainer.appendChild(card);
-    });
+        `
+        productsContainer.appendChild(card)
+    })
 
-    // Renderizar paginación de forma dinámica
-    const paginationContainer = document.querySelector(".pagination-container");
+    const paginationContainer = document.querySelector(".pagination-container")
     paginationContainer.innerHTML = `
         ${currentPage > 1 ? `<button class="pagination-button" onclick="requestPage(${currentPage - 1})">Anterior</button>` : `<span class="pagination-button disabled">Anterior</span>`}
         <span class="pagination-info">Página ${currentPage} de ${totalPages}</span>
         ${currentPage < totalPages ? `<button class="pagination-button" onclick="requestPage(${currentPage + 1})">Siguiente</button>` : `<span class="pagination-button disabled">Siguiente</span>`}
-    `;
-};
+    `
+}
 
-// Solicitar una página específica
 const requestPage = (page) => {
-    socket.emit("requestProductsPage", page);
-};
+    socket.emit("requestProductsPage", page)
+}
 
 const deleteProduct = (id) => {
     if (!id) {
@@ -76,10 +73,10 @@ const deleteProduct = (id) => {
 }
 
 document.getElementById("add-product-form").addEventListener("submit", (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    const formData = new FormData(event.target);
-    const thumbnailsRaw = formData.get("thumbnail");
+    const formData = new FormData(event.target)
+    const thumbnailsRaw = formData.get("thumbnail")
     const product = {
         code: formData.get("code"),
         title: formData.get("title"),
@@ -89,38 +86,38 @@ document.getElementById("add-product-form").addEventListener("submit", (event) =
         category: formData.get("category"),
         thumbnails: thumbnailsRaw.split(",").map(url => url.trim()),
         status: formData.get("status") === "true"
-    };
+    }
 
-    socket.emit("addProduct", product);
-    event.target.reset();
-});
+    socket.emit("addProduct", product)
+    event.target.reset()
+})
 
 // Manejo de agregar al carrito
 document.addEventListener("click", async (event) => {
     if (event.target.classList.contains("btn-add-to-cart")) {
-        const productId = event.target.getAttribute("data-id");
-        const lastCartId = document.querySelector(".cart-details h3").textContent.split("ID: ")[1];
+        const productId = event.target.getAttribute("data-id")
+        const lastCartId = document.querySelector(".cart-details h3").textContent.split("ID: ")[1]
 
         if (!productId || !lastCartId) {
-            alert("No se pudo encontrar el carrito o el producto.");
-            return;
+            alert("No se pudo encontrar el carrito o el producto.")
+            return
         }
 
         try {
             const response = await fetch(`/api/carts/${lastCartId}/products/${productId}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-            });
+            })
 
             if (response.ok) {
-                alert("Producto agregado al carrito exitosamente.");
-                location.reload(); // Recargar la página para actualizar el último carrito
+                alert("Producto agregado al carrito exitosamente.")
+                location.reload()
             } else {
-                const error = await response.json();
-                alert(`Error: ${error.error}`);
+                const error = await response.json()
+                alert(`Error: ${error.error}`)
             }
         } catch (error) {
-            console.error("Error al agregar el producto al carrito:", error);
+            console.error("Error al agregar el producto al carrito:", error)
         }
     }
-});
+})

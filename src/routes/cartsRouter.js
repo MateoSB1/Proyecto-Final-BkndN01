@@ -6,14 +6,14 @@ const router = Router()
 
 router.get("/", async (req, res) => {
     try {
-        const carts = await CartManager.getAllCarts(); // Implementar método en CartMongoManager
-        res.setHeader('Content-Type', 'application/json');
-        return res.status(200).json({ carts });
+        const carts = await CartManager.getAllCarts()
+        res.setHeader('Content-Type', 'application/json')
+        return res.status(200).json({ carts })
     } catch (error) {
-        console.error("Error al obtener los carritos:", error);
-        procesadorDeErrores500(res, error);
+        console.error("Error al obtener los carritos:", error)
+        procesadorDeErrores500(res, error)
     }
-});
+})
 
 router.get("/:cid", async (req, res) => {
     try {
@@ -42,13 +42,13 @@ router.post("/", async (req, res) => {
 
 router.post('/:cid/products/:pid', async (req, res) => {
     try {
-        const updatedCart = await CartManager.addProductCart(req.params.cid, req.params.pid);
-        res.status(200).json({ message: "Producto agregado al carrito.", updatedCart });
+        const updatedCart = await CartManager.addProductCart(req.params.cid, req.params.pid)
+        res.status(200).json({ message: "Producto agregado al carrito.", updatedCart })
     } catch (error) {
-        console.error("Error al agregar producto al carrito:", error);
-        procesadorDeErrores500(res, error);
+        console.error("Error al agregar producto al carrito:", error)
+        procesadorDeErrores500(res, error)
     }
-});
+})
 
 router.put('/:cid', async (req, res) => {
     try {
