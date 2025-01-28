@@ -1,0 +1,53 @@
+<div class="container-cartDetail">
+    {{#if carts.length}}
+    <h1 class="titlesCartDetail">Lista de Carritos</h1>
+    <ul class="list-group">
+        {{#each carts}}
+        <li class="list-group-item">
+            <h3>Carrito ID: <a href="/carts/{{this._id}}">{{this._id}}</a></h3>
+            <p><strong>Creado:</strong> {{this.createdAt}}</p>
+            <p><strong>Última actualización:</strong> {{this.updatedAt}}</p>
+
+            {{#if this.products.length}}
+            <h3 class="titlesCartDetail">Productos:</h3>
+            <ul>
+                {{#each this.products}}
+                <li>
+                    <p><strong>Producto:</strong> {{this.product.title}}</p>
+                    <p><strong>Cantidad:</strong> {{this.quantity}}</p>
+                    <p><strong>Precio:</strong> ${{this.product.price}}</p>
+                </li>
+                {{/each}}
+            </ul>
+            {{else}}
+            <p>Este carrito no tiene productos.</p>
+            {{/if}}
+        </li>
+        {{/each}}
+    </ul>
+    {{else if cart}}
+        <h4 class="titlesCartDetail">Detalles del Carrito</h4>
+        <p><strong>ID del Carrito:</strong> {{cart._id}}</p>
+        <p><strong>Creado:</strong> {{cart.createdAt}}</p>
+        <p><strong>Última actualización:</strong> {{cart.updatedAt}}</p>
+
+        {{#if cart.products.length}}
+        <h6 class="titlesCartDetail">Productos en el carrito:</h6>
+        <ul class="list-group">
+            {{#each cart.products}}
+            <li class="list-group-item">
+                <p><strong>Producto:</strong> {{this.product.title}}</p>
+                <p><strong>Cantidad:</strong> {{this.quantity}}</p>
+                <p><strong>Precio:</strong> ${{this.product.price}}</p>
+            </li>
+            {{/each}}
+        </ul>
+        {{else}}
+        <p>No hay productos en este carrito.</p>
+        {{/if}}
+        <a href="/carts">Volver a todos los Carritos</a>
+    {{else}}
+        <p>El carrito no fue encontrado.</p>
+        <a href="/carts">Volver a todos los Carritos</a>
+    {{/if}}
+</div>

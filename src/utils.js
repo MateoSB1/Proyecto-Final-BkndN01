@@ -35,7 +35,7 @@ export const validarProducto = (producto) => {
         errores.push('El campo "category" debe ser un string no vacío')
     }
 
-    if (!producto.thumbnail || typeof producto.thumbnail !== 'string' || producto.thumbnail.trim() === '') {
+    if (!producto.thumbnails || producto.thumbnails.trim() === '') {
         errores.push('El campo "thumbnail" debe ser una URL válida')
     }
 

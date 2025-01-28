@@ -1,8 +1,27 @@
-<div class="container-rtproduct">
+<div class="container-rtproducts">
     <h1 class="title-rtproducts">Productos en tiempo real</h1>
     <div id="productsContainer" class="products-cont">
         <!-- Cards Productos -->
     </div>
+
+    <!-- Contenedor de paginación -->
+    <div class="pagination-container">
+        {{#if hasPrevPage}}
+        <a href="?page={{prevPage}}" class="pagination-button">Anterior</a>
+        {{else}}
+        <span class="pagination-button disabled">Anterior</span>
+        {{/if}}
+
+        <span class="pagination-info">Página {{page}} de {{totalPages}}</span>
+
+        {{#if hasNextPage}}
+        <a href="?page={{nextPage}}" class="pagination-button">Siguiente</a>
+        {{else}}
+        <span class="pagination-button disabled">Siguiente</span>
+        {{/if}}
+    </div>
+
+    <!-- Formulario para agregar productos -->
     <div class="form-container">
         <h4 class="form-header">Agregar producto</h4>
         <form id="add-product-form" class="form">
@@ -32,8 +51,7 @@
             </div>
             <div class="form-group">
                 <label for="thumbnail" class="form-label">Imágenes:</label>
-                <input type="text" id="thumbnail" name="thumbnail"
-                    placeholder="URLs entre comillas y separadas por coma">
+                <input type="text" id="thumbnail" name="thumbnail" placeholder="URLs sin comillas y separadas por coma">
             </div>
             <div class="form-group">
                 <label for="status" class="form-label">Estado:</label>
@@ -47,5 +65,9 @@
             </div>
         </form>
     </div>
-</div><script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script>
-<script src="js/main.js"></script>
+</div>
+
+<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"
+    integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+"
+    crossorigin="anonymous"></script>
+<script src="/js/script.js"></script>

@@ -25,7 +25,7 @@
                 <td class="td-home">{{this.stock}}</td>
                 <td class="td-home">{{this.category}}</td>
                 <td class="td-home-img">
-                    <img src="{{this.thumbnail}}" alt="{{this.title}}" class="product-thumbnail">
+                    <img src="{{this.thumbnails.[0]}}" alt="{{this.title}}" class="product-thumbnail">
                 </td>
             </tr>
             {{/each}}
@@ -34,4 +34,26 @@
     {{else}}
     <p class="p-home">No hay productos ingresados en el sistema.</p>
     {{/if}}
+
+    {{#if multiplePages}}
+    <div class="pagination-container">
+        {{#if hasPrevPage}}
+        <a href="?page={{prevPage}}" class="pagination-button">Anterior</a>
+        {{else}}
+        <span class="pagination-button disabled">Anterior</span>
+        {{/if}}
+
+        <span class="pagination-info">Página {{page}} de {{totalPages}}</span>
+
+        {{#if hasNextPage}}
+        <a href="?page={{nextPage}}" class="pagination-button">Siguiente</a>
+        {{else}}
+        <span class="pagination-button disabled">Siguiente</span>
+        {{/if}}
+    </div>
+    {{/if}}
+
+    <div class="container-idCart">
+        <button id="add-cart" class="btn-idCart">🛒 Crear Carrito</button>
+    </div>
 </div>

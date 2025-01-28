@@ -1,0 +1,59 @@
+<div class="container-products">
+    <div class="grid-container">
+        <!-- Columna de productos -->
+        <div class="products-column">
+            <h2 class="title-products">Productos</h2>
+            <div class="products-grid">
+                {{#each products}}
+                <div class="product-card">
+                    <h2 class="product-card-subtitle">{{this.title}}</h2>
+                    <p class="product-card-p">{{this.description}}</p>
+                    <p class="product-card-p">Precio: ${{this.price}}</p>
+                    <p class="product-card-p">Stock: {{this.stock}} unidades</p>
+                    <p class="product-card-p">Categoría: {{this.category}}</p>
+                    <img class="product-card-img" src="{{this.thumbnails.[0]}}" alt="Imagen de {{this.title}}"
+                        onerror="this.src='https://via.placeholder.com/150';">
+                    <button class="btn-add-to-cart" data-id="{{this._id}}"> Agregar al carrito</button>
+                </div>
+                {{/each}}
+            </div>
+
+            <!-- Paginación -->
+            {{#if multiplePages}}
+            <div class="pagination-container">
+                {{#if hasPrevPage}}
+                <a href="?page={{prevPage}}" class="pagination-button">Anterior</a>
+                {{else}}
+                <span class="pagination-button disabled">Anterior</span>
+                {{/if}}
+
+                <span class="pagination-info">Página {{page}} de {{totalPages}}</span>
+
+                {{#if hasNextPage}}
+                <a href="?page={{nextPage}}" class="pagination-button">Siguiente</a>
+                {{else}}
+                <span class="pagination-button disabled">Siguiente</span>
+                {{/if}}
+            </div>
+            {{/if}}
+        </div>
+
+        <!-- Columna de carrito -->
+        <div class="cart-column">
+            <h3 class="title-products">Carrito</h3>
+            {{#if lastCart}}
+            <div class="cart-details">
+                <h3 class="cart-details-h3"3>ID: {{lastCart._id}}</h3>
+                <p class="cart-card-p">Productos:</p>
+                <ul class="cart-details-ul">
+                    {{#each lastCart.products}}
+                    <li class="cart-details-li">{{this.product.title}} - Cantidad: {{this.quantity}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+            {{else}}
+            <p class="product-card-p">No hay carritos disponibles.</p>
+            {{/if}}
+        </div>
+    </div>
+</div>

@@ -3,14 +3,22 @@ import { createServer } from "http"
 import { engine } from "express-handlebars"
 import { Server } from "socket.io"
 
-import ProductsManager from "./dao/ProductsManager.js"
+import { ProductsMongoManager as ProductsManager } from "./dao/ProductsMongoManager.js"
 
 import productsRouter from "./routes/productsRouter.js"
 import cartsRouter from "./routes/cartsRouter.js"
 import viewsRouter from "./routes/viewsRouter.js"
-const PORT = 8080
+
+import connectDB from './connect.js' 
+
+connectDB(
+    "mongodb+srv://mateobrancato26:yseG2y8N1AwORQt0@cluster0.iyyd1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    "MateoSB1BkndN01"
+)
 
 const app = express()
+const PORT = 8080
+
 const httpServer = createServer(app)
 
 const io = new Server(httpServer)
@@ -34,15 +42,23 @@ httpServer.listen(PORT, () => {
 })
 
 io.on("connection", async (socket) => {
-    console.log("Cliente conectado")
+    console.log('Cliente conectado');
 
-    socket.emit("products", await ProductsManager.getProducts())
+    const limit = 10;
 
-    socket.on("addProduct", async (productData) => {
-        const { title, description, price, code, status, stock, category, thumbnail } = productData
-        await ProductsManager.addProduct({ title, description, price, code, status, stock, category, thumbnail })
-        io.emit("products", await ProductsManager.getProducts())
-    })
+    const products = await ProductsManager.getProducts({ limit, page: 1 });
+    socket.emit('products', products.docs, products.totalPages, 1);
+
+    socket.on('requestProductsPage', async (page) => {
+        const products = await ProductsManager.getProducts({ limit, page });
+        socket.emit('paginatedProducts', products.docs, products.totalPages, page);
+    });
+
+    socket.on('addProduct', async (productData) => {
+        await ProductsManager.addProduct(productData);
+        const updatedProducts = await ProductsManager.getProducts({ limit, page: 1 });
+        io.emit('products', updatedProducts.docs, updatedProducts.totalPages, 1);
+    });    
 
     socket.on("deleteProduct", async (productId) => {
         if (!productId) {
@@ -57,9 +73,8 @@ io.on("connection", async (socket) => {
             console.error(`Error al eliminar producto con ID: ${productId}`, error)
         }
     })
-    
 
-    socket.on("disconnect", () => {
-        console.log("Cliente desconectado")
-    })
-})
+    socket.on('disconnect', () => {
+        console.log('Cliente desconectado');
+    });
+});

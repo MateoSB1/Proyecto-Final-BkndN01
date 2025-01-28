@@ -1,128 +1,81 @@
 import { Router } from "express"
-import { ProductsManager } from "../dao/ProductsManager.js"
-import { procesadorDeErrores500, validarProducto } from "../utils.js"
+import { ProductsMongoManager as ProductManager } from "../dao/ProductsMongoManager.js"
+import { procesadorDeErrores500 } from "../utils.js"
 
-export const router = Router()
+const router = Router()
 
-ProductsManager.setProductsPath("./src/data/products.json")
-
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
+    const { limit = 10, page = 1, sort, category, availability } = req.query
     try {
-        let products = await ProductsManager.getProducts()
-
-        res.setHeader('Content-Type', 'application/json')
-        return res.status(200).json({ products })
-
+        const products = await ProductManager.getProducts({
+            limit, page, sort, query: { category, availability }
+        })
+        return res.status(200).json({
+            status: 'success',
+            payload: products.docs,
+            totalPages: products.totalPages,
+            prevPage: products.prevPage,
+            nextPage: products.nextPage,
+            page: products.page,
+            hasPrevPage: products.hasPrevPage,
+            hasNextPage: products.hasNextPage,
+            prevLink: products.hasPrevPage ? `/api/products?limit=${limit}&page=${products.prevPage}&sort=${sort}&category=${category}&availability=${availability}` : null,
+            nextLink: products.hasNextPage ? `/api/products?limit=${limit}&page=${products.nextPage}&sort=${sort}&category=${category}&availability=${availability}` : null
+        })
     } catch (error) {
+        console.error("Error al obtener productos:", error)
         procesadorDeErrores500(res, error)
     }
 })
 
-router.get("/:id", async (req, res) => {
-
-    let { id } = req.params
-    id = Number(id)
-    if (isNaN(id)) {
-        res.setHeader('Content-Type', 'application/json')
-        return res.status(400).json({ error: `Complete con un id numérico` })
-    }
-
+router.get('/:pid', async (req, res) => {
     try {
-        let product = await ProductsManager.getProductById(id)
+        const product = await ProductManager.getProductById(req.params.pid)
         if (!product) {
             res.setHeader('Content-Type', 'application/json')
-            return res.status(404).json({ error: `No existe product con id ${id}` })
+            return res.status(404).json({ error: 'Producto no encontrado' })
         }
-
         res.setHeader('Content-Type', 'application/json')
         return res.status(200).json({ product })
     } catch (error) {
+        console.error("Error al obtener producto por ID:", error)
         procesadorDeErrores500(res, error)
     }
-
 })
 
-router.post("/", async (req, res) => {
-
-    let { code, title, description, price, status = true, stock, category, thumbnail } = req.body
-    if ((!title || !description || !code || !price || !stock || !category )) {
-        res.setHeader('Content-Type', 'application/json')
-        return res.status(400).json({ error: 'Completa la información' })
-    }
-
-    // Validaciones individuales de tipo de dato
-    const errores = validarProducto({ code, title, description, price, status, stock, category, thumbnail })
-
-    // Si hay errores, devolver la lista
-    if (errores.length > 0) {
-        res.setHeader('Content-Type', 'application/json')
-        return res.status(400).json({ error: 'Error en los datos enviados'})
-    }
-
-    // Verificación si ya existe el producto con el mismo código
+router.post('/', async (req, res) => {
     try {
-        let existe = await ProductsManager.getProductByCodeProduct(code)
-        if (existe) {
-            res.setHeader('Content-Type', 'application/json')
-            return res.status(400).json({ error: `Ya existe el producto con código ${code}` })
+        const newProduct = await ProductManager.addProduct(req.body)
+        res.setHeader('Content-Type', 'application/json')
+        return res.status(201).json({ payload: `Producto dado de alta exitosamente!`, newProduct })
+    } catch (error) {
+        console.error("Error al agregar producto:", error)
+        procesadorDeErrores500(res, error)
+    }
+})
+
+router.put('/:pid', async (req, res) => {
+    try {
+        const updatedProduct = await ProductManager.updateProduct(req.params.pid, req.body)
+        if (!updatedProduct) {
+            return res.status(404).json({ error: 'Producto no encontrado' })
         }
-
-        let nuevoProducto = await ProductsManager.addProduct({ code, title, description, price, status, stock, category, thumbnail })
-
-        res.setHeader('Content-Type', 'application/json')
-        return res.status(201).json({ payload: `Producto dado de alta exitosamente!`, nuevoProducto })
+        return res.status(200).json({ payload: 'Producto modificado', updatedProduct })
     } catch (error) {
+        console.error("Error al actualizar producto:", error)
         procesadorDeErrores500(res, error)
     }
-
 })
 
-router.put("/:id", async (req, res) => {
-    let { id } = req.params
-    id = Number(id)
-    if (isNaN(id)) {
-        return res.status(400).json({ error: `Complete con un id numérico` })
-    }
-
-    let aModificar = req.body
-    if (aModificar.id) {
-        return res.status(400).json({ error: 'No está permitido modificar el id' })
-    }
-
-    // Validaciones de tipo de dato
-    const errores = validarProducto(aModificar)
-    if (errores.length > 0) {
-        return res.status(400).json({ error: 'Error en los datos enviados', detalles: errores })
-    }
-
+router.delete('/:pid', async (req, res) => {
     try {
-        if (aModificar.code) {
-            let products = await ProductsManager.getProducts()
-            let existe = products.find(p => p.code.toLowerCase() === aModificar.code.trim().toLowerCase() && p.id !== id)
-
-            if (existe) {
-                return res.status(400).json({ error: `Ya existe un producto con código ${aModificar.code}. Tiene id ${existe.id}` })
-            }
+        const deletedProduct = await ProductManager.deleteProduct(req.params.pid)
+        if (!deletedProduct) {
+            return res.status(404).json({ error: 'Producto no encontrado' })
         }
-
-        let productModificado = await ProductsManager.editProduct(id, aModificar)
-        return res.status(200).json({ payload: `Se modificó el producto con id ${id}`, productModificado })
+        return res.status(200).json({ payload: 'Producto eliminado', deletedProduct })
     } catch (error) {
-        procesadorDeErrores500(res, error)
-    }
-})
-
-router.delete("/:id", async (req, res) => {
-    let { id } = req.params
-    id = Number(id)
-    if (isNaN(id)) {
-        return res.status(400).json({ error: 'El id debe ser numérico' })
-    }
-
-    try {
-        let eliminado = await ProductsManager.deleteProduct(id)
-        return res.status(200).json({ payload: `Se eliminó el producto con id ${id}`, eliminado })
-    } catch (error) {
+        console.error("Error al eliminar producto:", error)
         procesadorDeErrores500(res, error)
     }
 })
