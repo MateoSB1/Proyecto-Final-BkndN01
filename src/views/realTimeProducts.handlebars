@@ -1,5 +1,6 @@
 <div class="container-rtproducts">
     <h1 class="title-rtproducts">Productos en tiempo real</h1>
+    {{#if products.length}}
     <div id="productsContainer" class="products-cont">
         <!-- Cards Productos -->
     </div>
@@ -20,6 +21,9 @@
         <span class="pagination-button disabled">Siguiente</span>
         {{/if}}
     </div>
+    {{else}}
+    <p class="p-home">No hay productos ingresados en el sistema.</p>
+    {{/if}}
 
     <!-- Formulario para agregar productos -->
     <div class="form-container">

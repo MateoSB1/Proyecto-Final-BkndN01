@@ -13,42 +13,45 @@ export class CartMongoManager {
 
     static async getAllCarts() {
         try {
-            return await Cart.find().populate('products.product')
+            return await Cart.find().populate('products.product');
         } catch (error) {
-            console.error("Error al obtener todos los carritos:", error)
-            throw new Error("Error al obtener todos los carritos")
+            console.error("Error al obtener todos los carritos:", error);
+            throw new Error("Error al obtener todos los carritos");
         }
     }
 
     static async getCartById(id) {
         try {
-            return await Cart.findById(id).populate('products.product')
+            return await Cart.findById(id).populate('products.product');
         } catch (error) {
-            console.error("Error al obtener el carrito por ID:", error)
-            throw new Error("Error al obtener el carrito por ID")
+            console.error("Error al obtener el carrito por ID:", error);
+            throw new Error("Error al obtener el carrito por ID");
         }
     }
 
-    static async addProductCart(cid, pid) {
+    static async addProductCart(cid, pid, quantity) {
         try {
-            const cart = await Cart.findById(cid)
-            if (!cart) throw new Error("Carrito no encontrado")
-
-            const productIndex = cart.products.findIndex(p => p.product.toString() === pid)
-
+            const cart = await Cart.findById(cid);
+            if (!cart) throw new Error("Carrito no encontrado");
+    
+            const productIndex = cart.products.findIndex(p => p.product.toString() === pid);
+    
             if (productIndex > -1) {
-                cart.products[productIndex].quantity += 1
+                cart.products[productIndex].quantity += quantity;
             } else {
-                cart.products.push({ product: pid, quantity: 1 })
+                cart.products.push({ product: pid, quantity });
             }
+    
+            await cart.save();
 
-            return await cart.save()
+            const populatedCart = await Cart.findById(cid).populate('products.product');
+            return populatedCart;
         } catch (error) {
-            console.error("Error al agregar producto al carrito:", error)
-            throw new Error("Error al agregar producto al carrito")
+            console.error("Error al agregar producto al carrito:", error);
+            throw new Error("Error al agregar producto al carrito");
         }
     }
-
+    
     static async deleteProductCart(cid, pid) {
         try {
             const cart = await Cart.findById(cid)

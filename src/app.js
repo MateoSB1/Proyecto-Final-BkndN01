@@ -3,6 +3,7 @@ import { createServer } from "http"
 import { engine } from "express-handlebars"
 import { Server } from "socket.io"
 
+import { CartMongoManager as CartManager } from "./dao/CartMongoManager.js"
 import { ProductsMongoManager as ProductsManager } from "./dao/ProductsMongoManager.js"
 
 import productsRouter from "./routes/productsRouter.js"
@@ -62,17 +63,31 @@ io.on("connection", async (socket) => {
 
     socket.on("deleteProduct", async (productId) => {
         if (!productId) {
-            return
+            return;
         }
-
+    
         try {
-            await ProductsManager.deleteProduct(productId)
-            const products = await ProductsManager.getProducts()
-            io.emit("products", products)
+            await ProductsManager.deleteProduct(productId);
+            const limit = 10;
+            const updatedProducts = await ProductsManager.getProducts({ limit, page: 1 });
+    
+            io.emit("products", updatedProducts.docs, updatedProducts.totalPages, 1);
         } catch (error) {
-            console.error(`Error al eliminar producto con ID: ${productId}`, error)
+            console.error(`Error al eliminar producto con ID: ${productId}`, error);
         }
-    })
+    });    
+
+    const carts = await CartManager.getAllCarts();
+    socket.emit("carts", carts);
+
+    socket.on("addProductToCart", async ({ cartId, productId, quantity }) => {
+        try {
+            const updatedCart = await CartManager.addProductCart(cartId, productId, quantity);
+            io.emit("cartUpdated", updatedCart);
+        } catch (error) {
+            console.error("Error al agregar producto al carrito:", error);
+        }
+    });
 
     socket.on('disconnect', () => {
         console.log('Cliente desconectado')

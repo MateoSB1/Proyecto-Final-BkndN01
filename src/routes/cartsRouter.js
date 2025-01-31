@@ -6,14 +6,14 @@ const router = Router()
 
 router.get("/", async (req, res) => {
     try {
-        const carts = await CartManager.getAllCarts()
-        res.setHeader('Content-Type', 'application/json')
-        return res.status(200).json({ carts })
+        const carts = await CartManager.getAllCarts();
+        res.setHeader('Content-Type', 'application/json');
+        return res.status(200).json({ carts });
     } catch (error) {
-        console.error("Error al obtener los carritos:", error)
-        procesadorDeErrores500(res, error)
+        console.error("Error al obtener los carritos:", error);
+        procesadorDeErrores500(res, error);
     }
-})
+});
 
 router.get("/:cid", async (req, res) => {
     try {
@@ -32,23 +32,24 @@ router.get("/:cid", async (req, res) => {
 
 router.post("/", async (req, res) => {
     try {
-        const newCart = await CartManager.addCart()
-        res.status(201).json({ payload: `Carrito creado exitosamente`, newCart })
+        const newCart = await CartManager.addCart();
+        res.status(201).json({ payload: `Carrito creado exitosamente`, newCart });
     } catch (error) {
-        console.error("Error al crear carrito:", error)
-        procesadorDeErrores500(res, error)
+        console.error("Error al crear carrito:", error);
+        procesadorDeErrores500(res, error);
     }
-})
+});
 
 router.post('/:cid/products/:pid', async (req, res) => {
     try {
-        const updatedCart = await CartManager.addProductCart(req.params.cid, req.params.pid)
-        res.status(200).json({ message: "Producto agregado al carrito.", updatedCart })
+        const { quantity } = req.body;
+        const updatedCart = await CartManager.addProductCart(req.params.cid, req.params.pid, quantity);
+        res.status(200).json({ message: "Producto agregado al carrito.", updatedCart });
     } catch (error) {
-        console.error("Error al agregar producto al carrito:", error)
-        procesadorDeErrores500(res, error)
+        console.error("Error al agregar producto al carrito:", error);
+        procesadorDeErrores500(res, error);
     }
-})
+});
 
 router.put('/:cid', async (req, res) => {
     try {

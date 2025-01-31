@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
     <link rel="stylesheet" href="/styles/style.css">
 </head>
+
 <body>
     <header>
         <nav>
@@ -16,7 +18,7 @@
                 <li><a class="navbar-links-a" href="/">Home</a></li>
                 <li><a class="navbar-links-a" href="/products">Productos</a></li>
                 <li><a class="navbar-links-a" href="/realtimeproducts">Productos en Tiempo Real</a></li>
-                <li><a class="navbar-links-a" href="/carts">Ir al carrito</a></li>
+                <li><a class="navbar-links-a" href="#" id="go-to-cart">Ir al carrito</a></li>
             </ul>
             <div class="menu-hamburger">
                 <span class="line"></span>
@@ -37,7 +39,10 @@
 
     {{{body}}}
 
-
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"
+        integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+"
+        crossorigin="anonymous"></script>
     <script src="/js/script.js"></script>
 </body>
+
 </html>

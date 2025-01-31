@@ -41,25 +41,26 @@ router.get("/", async (req, res) => {
 })
 
 router.get("/products", async (req, res) => {
-    const { limit = 10, page = 1 } = req.query
+    const { limit = 10, page = 1 } = req.query;
 
     try {
         const products = await ProductManager.getProducts({
             limit: parseInt(limit, 10),
             page: parseInt(page, 10),
-        })
+        });
 
         const formattedProducts = products.docs.map(product => ({
+            _id: product._id,
             title: product.title || "Sin título",
             description: product.description || "Sin descripción",
             price: product.price || 0,
-            stock: product.stock || "Sin stock", // Aquí se incluye el stock
+            stock: product.stock || "Sin stock",
             category: product.category || "Sin categoría",
             thumbnails: product.thumbnails && product.thumbnails.length ? product.thumbnails : ["https://via.placeholder.com/150"],
-        }))
+        }));
 
-        const carts = await CartManager.getAllCarts()
-        const lastCart = carts.length ? carts[carts.length - 1] : null
+        const carts = await CartManager.getAllCarts();
+        const lastCart = carts.length ? carts[carts.length - 1] : null;
 
         res.render("products", {
             products: formattedProducts,
@@ -71,12 +72,12 @@ router.get("/products", async (req, res) => {
             page: products.page,
             hasPrevPage: products.hasPrevPage,
             hasNextPage: products.hasNextPage,
-        })
+        });
     } catch (error) {
-        console.error("Error al renderizar la vista de productos:", error)
-        res.status(500).send("Error al renderizar la vista.")
+        console.error("Error al renderizar la vista de productos:", error);
+        res.status(500).send("Error al renderizar la vista.");
     }
-})
+});
 
 router.get("/products/:pid", async (req, res) => {
     try {

@@ -352,7 +352,6 @@ textarea {
 }
 
 /* Paginación */
-/* Contenedor principal de la paginación */
 .pagination-container {
     display: flex;
     justify-content: center;
@@ -362,7 +361,6 @@ textarea {
     border-radius: 0.5rem;
 }
 
-/* Botones de paginación */
 .pagination-button {
     font-family: "Funnel Display", "Roboto", sans-serif;
     display: inline-block;
@@ -378,7 +376,6 @@ textarea {
     border: 0;
 }
 
-/* Botón deshabilitado */
 .pagination-button.disabled {
     color: #333;
     background-color: #cccccc;
@@ -386,13 +383,11 @@ textarea {
     pointer-events: none;
 }
 
-/* Información de la página */
 .pagination-info {
     font-size: 16px;
     color: #FFF;
 }
 
-/* Hover en botones */
 .pagination-button:hover:not(.disabled) {
     background-color: #0056b3;
 }
@@ -409,7 +404,6 @@ textarea {
 }
 
 /* PRODUCTS.HANDLEBARS */
-/* General Container */
 .container-products {
     max-width: 100%;
     margin: 2rem auto;
@@ -419,7 +413,6 @@ textarea {
     gap: 2rem;
 }
 
-/* Grid Layout */
 .grid-container {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -434,7 +427,6 @@ textarea {
     color: #fff;
 }
 
-/* Products Grid */
 .products-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -475,6 +467,17 @@ textarea {
     height: auto;
     border-radius: 8px;
     margin-top: 0.5rem;
+}
+
+.quantity-input {
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    margin: 10px 0;
 }
 
 /* Cart Details */
@@ -521,20 +524,4 @@ textarea {
     .product-card-img {
         max-width: 100px;
     }
-}
-
-.btn-add-to-cart {
-    font-family: "Funnel Display", "Roboto", sans-serif;
-    background-color: #0a3d62;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    margin: 1rem 0.5rem;
-}
-
-.btn-add-to-cart:hover {
-    background-color: #0056b3;
 }

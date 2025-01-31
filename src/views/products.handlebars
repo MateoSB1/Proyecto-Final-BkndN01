@@ -11,9 +11,11 @@
                     <p class="product-card-p">Precio: ${{this.price}}</p>
                     <p class="product-card-p">Stock: {{this.stock}} unidades</p>
                     <p class="product-card-p">Categoría: {{this.category}}</p>
-                    <img class="product-card-img" src="{{this.thumbnails.[0]}}" alt="Imagen de {{this.title}}"
-                        onerror="this.src='https://via.placeholder.com/150';">
-                    <button class="btn-add-to-cart" data-id="{{this._id}}"> Agregar al carrito</button>
+                    <img class="product-card-img" src="{{this.thumbnails.[0]}}" alt="Imagen de {{this.title}}" onerror="this.src='https://via.placeholder.com/150';">
+
+                    <input type="number" id="quantity-{{this._id}}" class="quantity-input" min="1" value="1">
+
+                    <button class="btn-idCart" onclick="addToCart('{{this._id}}')">Agregar al carrito</button>
                 </div>
                 {{/each}}
             </div>
@@ -43,7 +45,7 @@
             <h3 class="title-products">Carrito</h3>
             {{#if lastCart}}
             <div class="cart-details">
-                <h3 class="cart-details-h3" 3>ID: {{lastCart._id}}</h3>
+                <h3 class="cart-details-h3">ID: {{lastCart._id}}</h3>
                 <p class="cart-card-p">Productos:</p>
                 <ul class="cart-details-ul">
                     {{#each lastCart.products}}
@@ -57,3 +59,8 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"
+    integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+"
+    crossorigin="anonymous"></script>
+<script src="/js/script.js"></script>
